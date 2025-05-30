@@ -22,7 +22,8 @@ These gaps made it difficult to monitor participant onboarding, payment status, 
 
 - **Data Cleaning & Validation:**
   - Assessed each column for missing or incorrect values.
-  - Labeled entries as **Corrected** or **Not Corrected**.
+  - Created a custom **DAX measure** to dynamically flag records as **Corrected**, **Not Corrected**, or **N/A**.
+  - Used this logic to filter data, color visuals, and build progress indicators.
 
 - **Dashboard Features:**
   - Progress bars to visually represent the percentage of corrected vs. uncorrected data.
@@ -36,6 +37,7 @@ These gaps made it difficult to monitor participant onboarding, payment status, 
   - `Payment Category 3`: 99.07% Corrected
 
 ---
+
 
 ## 📈 Outcome & Impact
 
@@ -60,7 +62,39 @@ These gaps made it difficult to monitor participant onboarding, payment status, 
 - Power BI
 - Power Query (Data Cleaning)
 - DAX for KPIs and metrics
-## 👩🏽‍💻 Author
+
+---
+
+![ Data Column Progression Chart - Full View]((https://github.com/DamissahDebrah/Date-Column-Progression-Chart-for-Payment-Validation-and-Data-Integrity/blob/main/Date%20Column%20Validity.png)
+
+---
+## 🔢 DAX Logic Used
+
+The following DAX measure was used to identify the status of each row for validation:
+
+```dax
+Start_Date_Identifier = 
+IF(
+    AND(
+        'Global'[1st Installment] > 0, 
+        ISBLANK('Global'[Start Date])
+    ), 
+    "Not corrected",
+    IF(
+        ('Global'[1st Installment] > 0 && NOT ISBLANK('Global'[Start Date])), 
+        "Corrected",
+        IF(
+            AND(
+                'Global'[2nd Installment] > 0, 
+                NOT ISBLANK('Global'[Payment Date 2nd])
+            ), 
+            "Corrected",
+            "N/A"
+        )
+    )
+)
+
+---
 
 **Damissah Deborah E.**  
 📧 Email: [damissahdeborah@gmail.com](mailto:damissahdeborah@gmail.com)
